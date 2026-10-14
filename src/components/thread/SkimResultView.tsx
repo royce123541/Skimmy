@@ -1,9 +1,11 @@
 import type { JSX, ReactNode } from 'react'
+import { EventList } from '@/components/thread/EventList'
 import type { StoredSkim } from '@/types/db.types'
 import type { SkimActionItem } from '@/types/skim.types'
 
 export interface SkimResultViewProps {
   readonly skim: StoredSkim
+  readonly chatTitle: string
 }
 
 interface CitedText {
@@ -74,11 +76,13 @@ function ActionItemList({ items }: { readonly items: readonly SkimActionItem[] }
  * Renders a skim. Everything is plain text from the model; React escapes it, and nothing is
  * rendered as HTML (plan §2.5).
  *
- * @param props - The skim to show.
+ * @param props - The skim to show and its chat's title.
  * @returns The skim's sections.
  */
-export function SkimResultView({ skim }: SkimResultViewProps): JSX.Element {
+export function SkimResultView({ skim, chatTitle }: SkimResultViewProps): JSX.Element {
   const { result } = skim
+  const events = result.events ?? []
+  const decisions = result.decisions ?? []
   return (
     <article className="flex flex-col gap-4 text-sm">
       <p className="text-base leading-snug">{result.tldr}</p>
@@ -90,6 +94,16 @@ export function SkimResultView({ skim }: SkimResultViewProps): JSX.Element {
       {result.actionItems.length > 0 && (
         <Section title="Action items">
           <ActionItemList items={result.actionItems} />
+        </Section>
+      )}
+      {events.length > 0 && (
+        <Section title="Events">
+          <EventList events={events} chatTitle={chatTitle} skimId={skim.id} />
+        </Section>
+      )}
+      {decisions.length > 0 && (
+        <Section title="Decisions">
+          <CitedList items={decisions} />
         </Section>
       )}
       {result.highlights.length > 0 && (

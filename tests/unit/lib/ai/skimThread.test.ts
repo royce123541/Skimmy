@@ -35,6 +35,27 @@ const validOutput = {
   highlights: [{ text: 'Deposit due Friday', refs: ['m1', 'm9'] }],
   actionItems: [{ task: 'Pay deposit', owner: 'You', ownerIsMe: true, due: null, refs: ['m2'] }],
   questionsForMe: [{ text: 'Invented question', refs: ['m42'] }],
+  decisions: [{ text: 'You pay the deposit', refs: ['m2'] }],
+  events: [
+    {
+      title: 'Planning call',
+      start: '1970-01-01T20:00:00Z',
+      end: null,
+      allDay: false,
+      location: null,
+      certainty: 'proposed',
+      refs: ['m1'],
+    },
+    {
+      title: 'Misread date',
+      start: '1990-05-01',
+      end: null,
+      allDay: true,
+      location: null,
+      certainty: 'confirmed',
+      refs: ['m1'],
+    },
+  ],
 }
 
 describe('skimThread', () => {
@@ -72,6 +93,19 @@ describe('skimThread', () => {
     expect(skim?.result.highlights[0]?.sourceKeys).toHaveLength(1)
     expect(skim?.result.actionItems[0]?.ownerIsMe).toBe(true)
     expect(skim?.result.questionsForMe).toEqual([])
+    expect(skim?.result.decisions).toHaveLength(1)
+  })
+
+  test('flags events dated implausibly far from the message that mentions them', async () => {
+    // Act
+    await skimThread(deps, threadKey)
+
+    // Assert
+    const events = (await db.skims.toCollection().first())?.result.events
+    expect(events?.map(event => [event.title, event.needsReview])).toEqual([
+      ['Planning call', false],
+      ['Misread date', true],
+    ])
   })
 
   test('advances the watermark so the next skim only sees newer messages', async () => {

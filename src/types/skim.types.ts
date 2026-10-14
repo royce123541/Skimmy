@@ -18,10 +18,30 @@ export interface SkimQuestion {
   readonly sourceKeys: readonly string[]
 }
 
+export type EventCertainty = 'confirmed' | 'proposed'
+
+/** Something to put in a calendar, found in the chat. */
+export interface SkimEvent {
+  readonly title: string
+  /** ISO 8601 with offset, or YYYY-MM-DD when `allDay`. */
+  readonly start: string
+  readonly end: string | null
+  readonly allDay: boolean
+  readonly location: string | null
+  readonly certainty: EventCertainty
+  /** True when the date looks wrong: before its source message, or implausibly far ahead. */
+  readonly needsReview: boolean
+  readonly sourceKeys: readonly string[]
+}
+
 /** A validated skim whose citations point at stored message keys. */
 export interface GroundedSkim {
   readonly tldr: string
   readonly highlights: readonly SkimHighlight[]
   readonly actionItems: readonly SkimActionItem[]
   readonly questionsForMe: readonly SkimQuestion[]
+  /** Absent in skims made with prompt skim-v0. */
+  readonly decisions?: readonly SkimHighlight[]
+  /** Absent in skims made with prompt skim-v0. */
+  readonly events?: readonly SkimEvent[]
 }

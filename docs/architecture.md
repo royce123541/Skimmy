@@ -193,7 +193,7 @@ Platform order and quirks (selectors get verified during each phase's DOM invest
   - _Inbox_: new activity across platforms, from captured messages and sidebar unread markers.
   - _Action items_: mine or everyone's, plus what's due soon.
   - _Events_.
-  - _Current chat_: follows the active tab, with _Skim_, _Catch me up_, and the latest skim. Its citations jump to the source message.
+  - _Current chat_: follows the active tab, with _Skim_, _Catch up_, and the latest skim. Its citations jump to the source message.
 - **In-page overlay (secondary, minimal).** A Shadow-DOM pill near the chat header, plus an inline catch-up card. It re-mounts after the host app re-renders and never shifts the host's layout.
 - **Badge and shortcuts.** The toolbar badge counts open items assigned to the user, and a keyboard shortcut skims the current chat. Notifications (digest, questions for the user) are opt-in.
 - **Onboarding** (consent → platform grants → choose provider and enter key, or set up on-device → privacy defaults) and **Options**.
@@ -219,7 +219,7 @@ Platform order and quirks (selectors get verified during each phase's DOM invest
 - **Watermark.** Each thread has a skim watermark, and everything after it counts as unskimmed. Capture runs continuously, but nothing goes to an LLM until a trigger fires.
 - **Triggers:**
   - _Skim_: manual.
-  - _Catch me up_: backfills to the platform's unread divider (capped at about 500 messages), then skims. From the Inbox, it can first navigate the platform tab to that chat, but only when the user clicks.
+  - _Catch up_: backfills to the platform's unread divider (capped at about 500 messages), then skims. From the Inbox, it can first navigate the platform tab to that chat, but only when the user clicks.
   - _Skim all captured_: skims every captured chat that has new messages.
   - _Auto-skim_: opt-in per chat or workspace. Runs once a chat has N new messages and has been quiet for 2 minutes, within a monthly cost cap.
   - _Daily digest_: opt-in, driven by an alarm.
@@ -492,7 +492,7 @@ db.version(1).stores({
 - Add grounding, reconciliation, rolling memory and map-reduce.
 - Add **Claude and OpenAI providers**, plus a provider conformance suite: recorded responses must produce an identical validated result, with error mapping covered.
 - Build the model catalog and a provider picker with key checks.
-- Add _Catch me up_: backfill with progress and abort.
+- Add _Catch up_: backfill with progress and abort.
 - Add events with calendar handoff.
 - Add the cost meter and the refusal/error UX.
 - Build the eval harness.

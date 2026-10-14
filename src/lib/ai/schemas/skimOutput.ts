@@ -21,6 +21,22 @@ export const SkimOutputSchema = z.strictObject({
     }),
   ),
   questionsForMe: z.array(z.strictObject({ text: z.string(), refs: Refs })),
+  decisions: z.array(z.strictObject({ text: z.string(), refs: Refs })),
+  events: z.array(
+    z.strictObject({
+      title: z.string(),
+      start: z
+        .string()
+        .describe('ISO 8601 date-time with offset, or a YYYY-MM-DD date when allDay is true'),
+      end: z.string().nullable().describe('Same format as start, or null if not stated'),
+      allDay: z.boolean(),
+      location: z.string().nullable(),
+      certainty: z
+        .enum(['confirmed', 'proposed'])
+        .describe('confirmed only when the group agreed on this date and time'),
+      refs: Refs,
+    }),
+  ),
 })
 
 export type SkimOutput = z.infer<typeof SkimOutputSchema>

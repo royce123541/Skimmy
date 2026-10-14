@@ -49,10 +49,10 @@ export function CurrentChatView({ conversation }: CurrentChatViewProps): JSX.Ele
         </Notice>
       )}
       {view?.skim ? (
-        <SkimResultView skim={view.skim} />
+        <SkimResultView skim={view.skim} chatTitle={conversation.title} />
       ) : (
         <Notice title="No skim yet">
-          Press Catch me up and Skimmy scrolls and skims for you, or scroll yourself and press Skim.
+          Press Catch up and Skimmy scrolls and skims for you, or scroll yourself and press Skim.
         </Notice>
       )}
     </section>

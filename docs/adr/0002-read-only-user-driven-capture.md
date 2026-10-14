@@ -31,6 +31,6 @@ Skimmy reads only what the user's own tab already shows. Anything beyond that ha
 
 ## Consequences
 
-- Skimmy can't summarize a chat the user has never opened. For those chats, _Catch me up_ opens the chat on a click, backfills to the unread divider, then skims.
+- Skimmy can't summarize a chat the user has never opened. For those chats, _Catch up_ opens the chat on a click, backfills to the unread divider, then skims.
 - Rate limits and caps make large catch-ups slower, by design.
 - Platform terms and the store's user-data policy get a legal review before the public launch (Phase 8).

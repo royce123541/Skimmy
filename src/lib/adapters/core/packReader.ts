@@ -1,4 +1,5 @@
 import { outermost, readText } from '@/lib/adapters/core/domText'
+import { parseLabelTime } from '@/lib/adapters/core/labelTime'
 import {
   matchesAny,
   queryAll,
@@ -13,6 +14,14 @@ const SELF_ALIGNMENT_THRESHOLD = 0.1
 export interface ReadOptions {
   /** Sender to assume when a row shows no name (in a DM, the other person). */
   readonly fallbackSender: string
+  /** The reader's clock, for turning relative label times ("Tuesday 9:42pm") into dates. */
+  readonly now: Date
+}
+
+interface RowContext {
+  readonly list: Element
+  readonly pack: SelectorPack
+  readonly now: Date
 }
 
 function isRightAligned(bubble: Element, list: Element): boolean {
@@ -49,14 +58,21 @@ function readMessageId(row: Element, pack: SelectorPack): string | null {
   return id === '' ? null : id
 }
 
-// The sender named in the row's accessible label, when the label's language matches the pack.
-function labelSender(row: Element, pack: SelectorPack): string | null {
+interface LabelParts {
+  readonly sender: string | null
+  readonly time: string | null
+}
+
+// The sender and time named in the row's accessible label, when its language matches the pack.
+function readLabel(row: Element, pack: SelectorPack): LabelParts {
   if (pack.messageLabel === null) {
-    return null
+    return { sender: null, time: null }
   }
   const label = queryFirst(row, pack.messageLabel.element)?.getAttribute('aria-label') ?? ''
-  const sender = new RegExp(pack.messageLabel.pattern).exec(label)?.groups?.sender?.trim()
-  return sender === undefined || sender === '' ? null : sender
+  const groups = new RegExp(pack.messageLabel.pattern).exec(label)?.groups
+  const sender = groups?.sender?.trim() ?? ''
+  const time = groups?.time?.trim() ?? ''
+  return { sender: sender === '' ? null : sender, time: time === '' ? null : time }
 }
 
 interface SenderReading {
@@ -67,10 +83,10 @@ interface SenderReading {
 function resolveSender(
   row: Element,
   pack: SelectorPack,
+  fromLabel: string | null,
   isRightSide: boolean,
   lastSender: string,
 ): SenderReading {
-  const fromLabel = labelSender(row, pack)
   if (fromLabel !== null) {
     const isSelf = pack.messageLabel?.selfNames.includes(fromLabel) === true
     return isSelf ? { name: 'You', isSelf } : { name: fromLabel, isSelf }
@@ -88,21 +104,25 @@ interface RowReading {
   readonly lastSender: string
 }
 
-function readRow(row: Element, list: Element, pack: SelectorPack, lastSender: string): RowReading {
+function readRow(row: Element, context: RowContext, lastSender: string): RowReading {
+  const { list, pack } = context
   const body = bodyElements(row, pack)
   const text = body.map(readText).filter(Boolean).join('\n')
   const attachments = readAttachments(row, pack)
   if (text === '' && attachments.length === 0) {
     return { message: null, lastSender }
   }
-  const sender = resolveSender(row, pack, isRightAligned(body[0] ?? row, list), lastSender)
+  const label = readLabel(row, pack)
+  const rightSide = isRightAligned(body[0] ?? row, list)
+  const sender = resolveSender(row, pack, label.sender, rightSide, lastSender)
+  const sentAt = label.time === null ? null : parseLabelTime(label.time, context.now)
   const reply = queryFirst(row, pack.replyExcerpt)
   const message: CapturedMessage = {
     platformMessageId: readMessageId(row, pack),
     sender: { name: sender.name, platformUserId: null, isSelf: sender.isSelf },
     text,
-    sentAt: null,
-    timePrecision: 'captured',
+    sentAt,
+    timePrecision: sentAt === null ? 'captured' : 'minute',
     replyToExcerpt: reply ? readText(reply) : null,
     attachments,
     isSystemEvent: matchesAny(row, pack.systemEvent),
@@ -126,9 +146,10 @@ export function readMessages(
 ): CapturedMessage[] {
   const rows = queryAll(list, pack.messageRow)
   const messages: CapturedMessage[] = []
+  const context: RowContext = { list, pack, now: options.now }
   let lastSender = options.fallbackSender
   for (const row of rows) {
-    const reading = readRow(row, list, pack, lastSender)
+    const reading = readRow(row, context, lastSender)
     lastSender = reading.lastSender
     if (reading.message !== null) {
       messages.push(reading.message)

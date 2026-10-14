@@ -55,7 +55,7 @@ async function runCatchUp(
 }
 
 /**
- * "Catch me up": scrolls the chat in its tab until it has `target` messages, then skims the
+ * "Catch up": scrolls the chat in its tab until it has `target` messages, then skims the
  * newest `target`. The skim itself arrives through the database.
  *
  * @param tabId - The tab showing the chat.

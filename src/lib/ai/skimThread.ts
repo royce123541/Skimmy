@@ -43,6 +43,12 @@ async function saveSkim(db: SkimmyDb, skim: StoredSkim): Promise<void> {
   })
 }
 
+function messageTimes(messages: readonly StoredMessage[]): Map<string, number> {
+  return new Map(
+    messages.map(message => [message.messageKey, message.sentAt ?? message.capturedAt]),
+  )
+}
+
 function toStoredSkim(
   thread: StoredThread,
   messages: readonly StoredMessage[],
@@ -64,7 +70,7 @@ function toStoredSkim(
     fromOrder: messages[0]?.order ?? 0,
     toOrder: messages.at(-1)?.order ?? 0,
     messageCount: messages.length,
-    result: groundSkim(parsed.data, refToKey),
+    result: groundSkim(parsed.data, refToKey, messageTimes(messages)),
     usage: output.usage,
   })
 }

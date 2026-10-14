@@ -75,7 +75,10 @@ export function createMessengerAdapter(document: Document, pack: SelectorPack): 
     const list = getMessageListRoot()
     return list === null
       ? []
-      : readMessages(list, pack, { fallbackSender: conversationTitle(document, pack) })
+      : readMessages(list, pack, {
+          fallbackSender: conversationTitle(document, pack),
+          now: new Date(),
+        })
   }
 
   return {

@@ -50,7 +50,7 @@ function CatchUpButton({ phase, onCancel }: ButtonProps): JSX.Element {
         type="submit"
         className="ml-auto rounded-md bg-indigo-600 px-3 py-1.5 font-medium text-white hover:bg-indigo-500"
       >
-        Catch me up
+        Catch up
       </button>
     )
   }
