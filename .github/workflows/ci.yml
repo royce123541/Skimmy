@@ -40,18 +40,19 @@ jobs:
           npm run zip:edge
           node scripts/assert-store-manifest.js .output/chrome-mv3/manifest.json .output/edge-mv3/manifest.json
 
-      - name: Install Playwright Chromium
-        run: npx playwright install --with-deps chromium
-
-      - name: End-to-end tests (test build with platform access pre-granted)
-        run: npm run e2e
-
+      # Upload before the e2e build, which clears .output/.
       - name: Upload extension packages
         uses: actions/upload-artifact@v4
         with:
           name: skimmy-extension
           path: .output/*.zip
           if-no-files-found: error
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: End-to-end tests (test build with platform access pre-granted)
+        run: npm run e2e
 
       - name: Upload Playwright traces on failure
         if: failure()
