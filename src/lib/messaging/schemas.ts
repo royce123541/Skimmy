@@ -51,11 +51,14 @@ export const ConversationChangedSchema = z.strictObject({
   conversation: ConversationRefSchema.nullable(),
 }) satisfies z.ZodType<ConversationChangedPayload>
 
+const CloudProviderSchema = z.enum(['gemini', 'claude', 'openai'])
+
 const CatchUpCountSchema = z.int().min(1).max(MAX_CATCH_UP_MESSAGES)
 
 export const RequestSkimSchema = z.strictObject({
   threadKey: z.string().min(1),
   lastCount: CatchUpCountSchema.optional(),
+  provider: CloudProviderSchema.optional(),
 }) satisfies z.ZodType<RequestSkimPayload>
 
 export const StartCatchUpSchema = z.strictObject({
@@ -63,10 +66,10 @@ export const StartCatchUpSchema = z.strictObject({
 }) satisfies z.ZodType<StartCatchUpPayload>
 
 export const SaveApiKeySchema = z.strictObject({
-  provider: z.literal('gemini'),
+  provider: CloudProviderSchema,
   apiKey: z.string().trim().min(1),
 }) satisfies z.ZodType<SaveApiKeyPayload>
 
 export const DeleteApiKeySchema = z.strictObject({
-  provider: z.literal('gemini'),
+  provider: CloudProviderSchema,
 }) satisfies z.ZodType<DeleteApiKeyPayload>

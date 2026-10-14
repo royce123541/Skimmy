@@ -25,10 +25,12 @@
     "postinstall": "wxt prepare"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.133.0",
     "@google/genai": "^2.29.0",
     "@webext-core/messaging": "^4.0.0",
     "dexie": "^4.4.6",
     "dexie-react-hooks": "^4.4.0",
+    "openai": "^7.33.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "zod": "^4.6.7"

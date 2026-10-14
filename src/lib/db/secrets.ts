@@ -40,3 +40,14 @@ export async function saveApiKey(
 export async function deleteApiKey(db: SkimmyDb, provider: CloudProviderId): Promise<void> {
   await db.secrets.delete(provider)
 }
+
+/**
+ * Which providers have a saved key. Reads names only, never the keys.
+ *
+ * @param db - The database.
+ * @returns Providers with keys, in settings order.
+ */
+export async function providersWithKeys(db: SkimmyDb): Promise<CloudProviderId[]> {
+  const names = new Set(await db.secrets.toCollection().primaryKeys())
+  return (['gemini', 'claude', 'openai'] as const).filter(id => names.has(id))
+}

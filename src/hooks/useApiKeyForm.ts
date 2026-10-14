@@ -1,5 +1,6 @@
 import { useCallback, useState, type SyntheticEvent } from 'react'
 import { sendMessage } from '@/lib/messaging/protocol'
+import type { CloudProviderId } from '@/types/ai.types'
 import type { RpcResult } from '@/types/rpc.types'
 
 export type SaveState =
@@ -25,12 +26,13 @@ function stateFrom(result: RpcResult<null>, onSuccess: SaveState): SaveState {
 }
 
 /**
- * State and actions for the Gemini key form. Saving goes through the service worker, which
- * verifies the key before storing it.
+ * State and actions for one provider's key form. Saving goes through the service worker,
+ * which verifies the key before storing it.
  *
+ * @param provider - Whose key the form edits.
  * @returns The current input, save state and actions.
  */
-export function useApiKeyForm(): ApiKeyForm {
+export function useApiKeyForm(provider: CloudProviderId): ApiKeyForm {
   const [apiKey, setApiKey] = useState('')
   const [state, setState] = useState<SaveState>({ kind: 'idle' })
 
@@ -38,7 +40,7 @@ export function useApiKeyForm(): ApiKeyForm {
     (event: SyntheticEvent<HTMLFormElement>) => {
       event.preventDefault()
       setState({ kind: 'saving' })
-      sendMessage('saveApiKey', { provider: 'gemini', apiKey })
+      sendMessage('saveApiKey', { provider, apiKey })
         .then(result => {
           setState(stateFrom(result, { kind: 'saved' }))
           if (result.success) {
@@ -49,18 +51,18 @@ export function useApiKeyForm(): ApiKeyForm {
           setState(failedState(error))
         })
     },
-    [apiKey],
+    [apiKey, provider],
   )
 
   const remove = useCallback(() => {
-    sendMessage('deleteApiKey', { provider: 'gemini' })
+    sendMessage('deleteApiKey', { provider })
       .then(result => {
         setState(stateFrom(result, { kind: 'idle' }))
       })
       .catch((error: unknown) => {
         setState(failedState(error))
       })
-  }, [])
+  }, [provider])
 
   return { apiKey, state, setApiKey, submit, remove }
 }

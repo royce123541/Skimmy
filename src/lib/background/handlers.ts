@@ -1,6 +1,5 @@
 import { browser } from '#imports'
-import { resolveProvider } from '@/lib/ai/gateway'
-import { validateGeminiKey } from '@/lib/ai/providers/gemini'
+import { resolveProvider, validateApiKey } from '@/lib/ai/gateway'
 import { skimThread } from '@/lib/ai/skimThread'
 import { rememberTab } from '@/lib/background/tabRegistry'
 import { getDb } from '@/lib/db/schema'
@@ -8,6 +7,7 @@ import { deleteApiKey, saveApiKey } from '@/lib/db/secrets'
 import { ingestBatch } from '@/lib/ingest/ingestBatch'
 import { guarded } from '@/lib/messaging/guarded'
 import { onMessage } from '@/lib/messaging/protocol'
+import { readAiSettings } from '@/lib/storage/aiSettings'
 import { ok } from '@/lib/messaging/rpcResult'
 import {
   ConversationChangedSchema,
@@ -51,7 +51,7 @@ export function registerMessageHandlers(): void {
     'requestSkim',
     guarded(RequestSkimSchema, async data => {
       const db = getDb()
-      const provider = await resolveProvider(db)
+      const provider = await resolveProvider(db, await readAiSettings(), data.provider)
       if (!provider.success) {
         return provider
       }
@@ -63,7 +63,7 @@ export function registerMessageHandlers(): void {
   onMessage(
     'saveApiKey',
     guarded(SaveApiKeySchema, async data => {
-      const check = await validateGeminiKey(data.apiKey)
+      const check = await validateApiKey(data.provider, data.apiKey)
       if (check.success) {
         await saveApiKey(getDb(), data.provider, data.apiKey, Date.now())
       }

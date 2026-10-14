@@ -7,7 +7,7 @@ Skimmy skims your group chats into summaries, action items and calendar events, 
 ## Try it (Phase 1)
 
 1. Build and load Skimmy (see below), then open **Settings** (right-click the toolbar icon → Options).
-2. Paste a Gemini API key. Skimmy checks it without spending tokens and keeps it in this browser only. On Gemini's free tier, Google may use chat content to improve its products, so test with made-up messages or use a paid key.
+2. Under **AI provider**, paste a key for Gemini, Claude or ChatGPT (an OpenAI API key; ChatGPT and Claude subscriptions don't include API access) and pick which one skims. Skimmy checks each key without spending tokens and keeps it in this browser only. On Gemini's free tier, Google may use chat content to improve its products, so test with made-up messages or use a paid key.
 3. Under **Platforms**, turn on Messenger and approve Chrome's prompt.
 4. Open a chat on messenger.com or facebook.com/messages, scroll a little, and click the Skimmy toolbar icon. The side panel shows how many messages were captured. **Skim** summarizes everything new since the last skim.
 

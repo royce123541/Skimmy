@@ -3,7 +3,7 @@ import { browser } from '#imports'
 import { CurrentChatView } from '@/components/thread/CurrentChatView'
 import { Notice } from '@/components/ui/Notice'
 import { useActiveConversation } from '@/hooks/useActiveConversation'
-import { useHasGeminiKey } from '@/hooks/useThreadView'
+import { useProvidersWithKeys } from '@/hooks/useThreadView'
 
 function SetupNotice(): JSX.Element {
   const openSettings = useCallback(() => {
@@ -51,14 +51,14 @@ function EmptyState(): JSX.Element {
  */
 export function SidePanelApp(): JSX.Element {
   const conversation = useActiveConversation()
-  const hasKey = useHasGeminiKey()
+  const withKeys = useProvidersWithKeys()
   return (
     <main className="flex min-h-screen flex-col bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">
       <header className="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
         <h1 className="text-lg font-semibold tracking-tight">Skimmy</h1>
         <p className="text-sm text-slate-500 dark:text-slate-400">Your group chats, skimmed.</p>
       </header>
-      {hasKey === false && <SetupNotice />}
+      {withKeys?.length === 0 && <SetupNotice />}
       {conversation === null ? <EmptyState /> : <CurrentChatView conversation={conversation} />}
     </main>
   )

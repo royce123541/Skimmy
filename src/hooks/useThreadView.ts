@@ -2,6 +2,8 @@ import Dexie from 'dexie'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { latestSkim } from '@/lib/db/queries'
 import { getDb } from '@/lib/db/schema'
+import { providersWithKeys } from '@/lib/db/secrets'
+import type { CloudProviderId } from '@/types/ai.types'
 import type { StoredSkim, StoredThread } from '@/types/db.types'
 
 export interface ThreadView {
@@ -43,13 +45,11 @@ export function useThreadView(threadKey: string): ThreadView | undefined {
 }
 
 /**
- * Whether a Gemini key is saved. Only existence is read here; the key itself never leaves
+ * Which providers have a saved key. Only existence is read here; keys themselves never leave
  * the service worker's code paths.
  *
- * @returns True or false, or undefined while loading.
+ * @returns Provider ids with keys, or undefined while loading.
  */
-export function useHasGeminiKey(): boolean | undefined {
-  return useLiveQuery(
-    async () => (await getDb().secrets.where('name').equals('gemini').count()) > 0,
-  )
+export function useProvidersWithKeys(): CloudProviderId[] | undefined {
+  return useLiveQuery(() => providersWithKeys(getDb()))
 }

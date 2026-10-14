@@ -9,6 +9,14 @@ export const GEMINI_DEFAULT_MODEL = 'gemini-3.5-flash-lite'
 
 const PROVIDER_NAME = 'Gemini'
 
+/** Same retry budget as the other providers' SDKs, so a skim fails within the same time. */
+const DEFAULT_MAX_RETRIES = 2
+
+export interface GeminiOptions {
+  /** Retries after the first attempt for 408/429/5xx. Tests set 0. */
+  readonly maxRetries?: number
+}
+
 interface StreamAccumulator {
   text: string
   usage: TokenUsage
@@ -35,21 +43,25 @@ async function collectStream(
   client: GoogleGenAI,
   model: string,
   request: SkimRequest,
+  maxRetries: number,
 ): Promise<StreamAccumulator> {
-  const stream = await client.interactions.create({
-    model,
-    system_instruction: request.systemPrompt,
-    input: request.userPrompt,
-    response_format: {
-      type: 'text',
-      mime_type: 'application/json',
-      schema: request.responseSchema,
+  const stream = await client.interactions.create(
+    {
+      model,
+      system_instruction: request.systemPrompt,
+      input: request.userPrompt,
+      response_format: {
+        type: 'text',
+        mime_type: 'application/json',
+        schema: request.responseSchema,
+      },
+      generation_config: { thinking_level: 'low' },
+      // Skimmy never needs server-side history; don't let Google keep the chat (ADR 0003).
+      store: false,
+      stream: true,
     },
-    generation_config: { thinking_level: 'low' },
-    // Skimmy never needs server-side history; don't let Google keep the chat (ADR 0003).
-    store: false,
-    stream: true,
-  })
+    { maxRetries },
+  )
   const accumulator: StreamAccumulator = {
     text: '',
     usage: { inputTokens: 0, outputTokens: 0 },
@@ -89,16 +101,22 @@ function toOutput(accumulator: StreamAccumulator, model: string): RpcResult<Prov
  *
  * @param apiKey - The user's Gemini API key.
  * @param model - Model id; defaults to the development model.
+ * @param options - Retry tuning.
  * @returns A provider for the LLM gateway.
  */
-export function createGeminiProvider(apiKey: string, model = GEMINI_DEFAULT_MODEL): LlmProvider {
+export function createGeminiProvider(
+  apiKey: string,
+  model = GEMINI_DEFAULT_MODEL,
+  options: GeminiOptions = {},
+): LlmProvider {
   const client = new GoogleGenAI({ apiKey })
+  const maxRetries = options.maxRetries ?? DEFAULT_MAX_RETRIES
   return {
     id: 'gemini',
     model,
     async generateSkim(request) {
       try {
-        return toOutput(await collectStream(client, model, request), model)
+        return toOutput(await collectStream(client, model, request, maxRetries), model)
       } catch (error) {
         return mapProviderError(error, PROVIDER_NAME)
       }

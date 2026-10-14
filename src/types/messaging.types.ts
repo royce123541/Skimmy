@@ -14,6 +14,8 @@ export interface RequestSkimPayload {
   readonly threadKey: string
   /** Skim the newest N messages instead of only those since the last skim. */
   readonly lastCount?: number
+  /** Use this provider instead of the default, for "Retry with…". */
+  readonly provider?: CloudProviderId
 }
 
 export interface StartCatchUpPayload {
@@ -30,10 +32,10 @@ export interface CatchUpOutcome {
 }
 
 export interface SaveApiKeyPayload {
-  readonly provider: Extract<CloudProviderId, 'gemini'>
+  readonly provider: CloudProviderId
   readonly apiKey: string
 }
 
 export interface DeleteApiKeyPayload {
-  readonly provider: Extract<CloudProviderId, 'gemini'>
+  readonly provider: CloudProviderId
 }

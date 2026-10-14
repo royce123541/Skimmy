@@ -1,9 +1,9 @@
 import type { JSX } from 'react'
-import { GeminiKeySection } from '@/components/options/GeminiKeySection'
+import { AiProviderSection } from '@/components/options/AiProviderSection'
 import { PlatformsSection } from '@/components/options/PlatformsSection'
 
 /**
- * Skimmy settings: AI provider key and per-platform access.
+ * Skimmy settings: AI providers and keys, and per-platform access.
  *
  * @returns The options page.
  */
@@ -13,7 +13,7 @@ export function OptionsApp(): JSX.Element {
       <header>
         <h1 className="text-2xl font-semibold tracking-tight">Skimmy settings</h1>
       </header>
-      <GeminiKeySection />
+      <AiProviderSection />
       <PlatformsSection />
     </main>
   )

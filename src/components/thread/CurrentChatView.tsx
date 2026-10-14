@@ -1,5 +1,6 @@
 import type { JSX } from 'react'
 import { CatchUpControl } from '@/components/thread/CatchUpControl'
+import { SkimErrorNotice } from '@/components/thread/SkimErrorNotice'
 import { SkimResultView } from '@/components/thread/SkimResultView'
 import { Notice } from '@/components/ui/Notice'
 import type { ActiveConversation } from '@/hooks/useActiveConversation'
@@ -31,7 +32,9 @@ export function CurrentChatView({ conversation }: CurrentChatViewProps): JSX.Ele
         </div>
         <button
           type="button"
-          onClick={skim}
+          onClick={() => {
+            skim()
+          }}
           disabled={isSkimming || unskimmed === 0}
           className="shrink-0 rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
         >
@@ -43,11 +46,7 @@ export function CurrentChatView({ conversation }: CurrentChatViewProps): JSX.Ele
         threadKey={conversation.threadKey}
         capturedCount={view?.messageCount ?? 0}
       />
-      {error !== null && (
-        <Notice tone="error" title="Couldn't skim this chat">
-          {error.message}
-        </Notice>
-      )}
+      {error !== null && <SkimErrorNotice error={error} onRetry={skim} />}
       {view?.skim ? (
         <SkimResultView skim={view.skim} chatTitle={conversation.title} />
       ) : (
