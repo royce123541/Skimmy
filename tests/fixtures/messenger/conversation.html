@@ -1,0 +1,243 @@
+<!doctype html>
+<!--
+  Synthetic fixture shaped like www.messenger.com as seen in DOM recon on 2026-10-14
+  (selector pack 1.0.0). The element structure, roles and attributes mirror the real page;
+  every name, message, id and URL is invented. Hashed class names are left out because the
+  adapter doesn't use them.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Messenger</title>
+    <style>
+      [role='log'] {
+        width: 600px;
+      }
+      [role='article'] {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin: 4px 0;
+      }
+      .hidden-tooltip {
+        display: inline-block;
+        width: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div role="main">
+      <div data-pagelet="MWThreadHeader"><h2 dir="auto">Weekend Trip Crew</h2></div>
+      <div
+        role="log"
+        aria-label="Messages in conversation titled Weekend Trip Crew"
+        aria-live="polite"
+      >
+        <div data-virtualized="false">
+          <div role="none">
+            <div data-scope="messages_table" tabindex="0">
+              <div role="presentation">
+                <div aria-hidden="true" data-scope="date_break">
+                  <span dir="auto"><span>Sat 6:02 PM</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div role="article">
+            <div>
+              <div
+                aria-roledescription="message"
+                aria-label="At Saturday 6:02pm, Mia Santos: Who's handling the Airbnb deposit?"
+                data-message-id="mid.$fixture0001"
+                data-scope="messages_table"
+                tabindex="0"
+              >
+                <div role="presentation">
+                  <span aria-hidden="true"
+                    ><h3 dir="auto">
+                      <span dir="auto"><span>Mia Santos</span></span>
+                    </h3></span
+                  >
+                </div>
+                <div role="presentation">
+                  <div role="none">
+                    <div role="presentation">
+                      <span dir="auto"
+                        ><div dir="auto">Who's handling the Airbnb deposit?</div></span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div role="none">
+              <div role="button" aria-label="Message actions" tabindex="-1">
+                <span dir="auto" class="hidden-tooltip"
+                  >Enter, Message sent Saturday 6:02pm by Mia Santos</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div role="article">
+            <div>
+              <div
+                aria-roledescription="message"
+                aria-label="At Saturday 6:03pm, Mia Santos: Also need someone to book the van 🚐"
+                data-message-id="mid.$fixture0002"
+                data-scope="messages_table"
+                tabindex="0"
+              >
+                <div aria-hidden="true">
+                  <span>
+                    <div role="button" aria-haspopup="menu" aria-expanded="false" tabindex="-1">
+                      <img
+                        alt="Mia Santos"
+                        src="https://scontent.example.fbcdn.net/avatar-mia.jpg"
+                        width="28"
+                        height="28"
+                      />
+                    </div>
+                  </span>
+                </div>
+                <div role="presentation">
+                  <div role="none">
+                    <span dir="auto"
+                      ><div dir="auto">
+                        Also need someone to book the van
+                        <img alt="🚐" src="https://static.example.fbcdn.net/van.png" /></div
+                    ></span>
+                    <div>
+                      <span
+                        ><img
+                          alt="😆"
+                          src="https://static.example.fbcdn.net/laugh.png"
+                          width="14"
+                          height="14"
+                      /></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div role="article">
+            <div>
+              <div
+                aria-roledescription="message"
+                aria-label="At Saturday 6:05pm, Marcou :3: I can do the van 👍"
+                data-message-id="mid.$fixture0003"
+                data-scope="messages_table"
+                tabindex="0"
+              >
+                <div role="presentation">
+                  <span aria-hidden="true"
+                    ><h3 dir="auto">
+                      <span dir="auto"><span>Marcou :3</span></span>
+                    </h3></span
+                  >
+                </div>
+                <div role="presentation">
+                  <div role="none">
+                    <span dir="auto"
+                      ><div dir="auto">
+                        I can do the van
+                        <img alt="👍" src="https://static.example.fbcdn.net/thumb.png" /></div
+                    ></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div role="article">
+            <div>
+              <div
+                aria-roledescription="message"
+                aria-label="At Saturday 6:06pm, You: I'll pay the deposit tonight"
+                data-message-id="mid.$fixture0004"
+                data-scope="messages_table"
+                tabindex="0"
+              >
+                <div role="presentation">
+                  <span aria-hidden="true"
+                    ><h3 dir="auto">
+                      <span dir="auto"><span>You replied to Mia Santos</span></span>
+                    </h3></span
+                  >
+                </div>
+                <div role="presentation">
+                  <div role="presentation">
+                    <div role="button" aria-label="Open the original message" tabindex="-1">
+                      <div role="presentation">
+                        <span dir="auto">Who's handling the Airbnb deposit?</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div role="presentation">
+                  <div role="none">
+                    <span dir="auto"><div dir="auto">I'll pay the deposit tonight</div></span>
+                  </div>
+                </div>
+                <div role="presentation">
+                  <div role="button" aria-label="Seen by Mia Santos" tabindex="-1">
+                    <span
+                      ><img
+                        alt="Seen by Mia Santos at 6:07pm"
+                        src="https://scontent.example.fbcdn.net/avatar-mia.jpg"
+                        width="16"
+                        height="16"
+                    /></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div role="article">
+            <div>
+              <div
+                aria-roledescription="message"
+                aria-label="Mensaje de Mia Santos"
+                data-message-id="mid.$fixture0005"
+                data-scope="messages_table"
+                tabindex="0"
+              >
+                <div role="presentation">
+                  <span aria-hidden="true"
+                    ><h3 dir="auto">
+                      <span dir="auto"><span>Mia Santos</span></span>
+                    </h3></span
+                  >
+                </div>
+                <div role="presentation">
+                  <div role="none">
+                    <img alt="Open photo" src="https://scontent.example.fbcdn.net/beach.jpg" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div role="article">
+            <div>
+              <div
+                aria-roledescription="message"
+                aria-label="At Saturday 6:09pm, Jo Reyes: "
+                data-message-id="mid.$fixture0006"
+                data-scope="messages_table"
+                tabindex="0"
+              >
+                <div role="presentation"><div role="none"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

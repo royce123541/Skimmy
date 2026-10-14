@@ -1,0 +1,27 @@
+{
+  "platform": "messenger",
+  "version": "1.0.0",
+  "notes": "From DOM recon on www.messenger.com, 2026-10-14 (English UI). Rows are role=article under role=log; ids are mid.$… in data-message-id. Unverified: outgoing messages, photo attachments, system events, non-English labels.",
+  "conversationTitle": ["[role=\"main\"] h2"],
+  "messageList": ["[role=\"main\"] [role=\"log\"]"],
+  "messageRow": ["[role=\"article\"]"],
+  "messageId": {
+    "element": ["[data-message-id]"],
+    "attribute": "data-message-id"
+  },
+  "messageLabel": {
+    "element": ["[data-message-id][aria-label]"],
+    "pattern": "^At (?<time>[^,]+), (?<sender>.+?): ",
+    "selfNames": ["You"]
+  },
+  "messageText": ["[data-message-id] span[dir=\"auto\"] > div[dir=\"auto\"]"],
+  "senderName": ["h3"],
+  "selfMarker": [],
+  "replyExcerpt": ["[data-message-id] [role=\"button\"][aria-label] span[dir=\"auto\"]"],
+  "systemEvent": [],
+  "attachments": {
+    "image": ["[data-message-id] [role=\"none\"] img[src*=\"scontent\"]"],
+    "video": ["[data-message-id] video"],
+    "audio": ["[data-message-id] audio"]
+  }
+}

@@ -1,0 +1,22 @@
+# Dependencies and build output
+node_modules/
+.output/
+.wxt/
+stats.html
+stats-*.json
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+web-ext.config.ts
+
+# Test artifacts
+playwright-report/
+test-results/
+coverage/
+
+# Logs and OS files
+*.log
+.DS_Store
+Thumbs.db
